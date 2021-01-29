@@ -1,123 +1,119 @@
 <!doctype html>
-
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-
-  <title>The HTML5 Herald</title>
-  <meta name="description" content="jsSnake">
-  <meta name="author" content="Rozalia Korycka">
-  <style>
-	body {
-	  display: flex;
-	  justify-content: center;
-	  align-content: center;
-	}
-	</style>
-
-</head>
-
-<body>
-  <canvas id="canvas" width="400" height="400" tabindex="-1"></canvas>
-<script>
-    var canvas, ctx, refreshInterval;
-      window.onload = function() {
-        canvas = document.getElementById("canvas");
-        ctx = canvas.getContext("2d");
-		//paint background
-		ctx.fillStyle = "black";
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		
-		//title screen
-		ctx.fillStyle = "white";
-		ctx.font = "100px Arial";		
-		ctx.fillText("SNAKE", 25, canvas.height/2);
-		ctx.font = "35px Arial";		
-		ctx.fillText("Click to play", canvas.width/2 - 50, canvas.height/2 + 40);
-		ctx.font = "15px Arial";		
-		ctx.fillText("Use arrow keys to move", canvas.width/2 - 80, canvas.height - 10);   
-		
-		//add events
-		canvas.addEventListener("focus", myFocusFunction, true);
-		canvas.addEventListener("blur", myBlurFunction, true);
-		
-      };
-	  
-	  //canvas focused
-	  function myFocusFunction() {	 
+	<head>
+		<meta charset="utf-8">
+		<title>The HTML5 Herald</title>
+		<meta name="description" content="jsSnake">
+		<meta name="author" content="Rozalia Korycka">
+		<style>
+			body {
+			display: flex;
+			justify-content: center;
+			align-content: center;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="400" height="400" tabindex="-1"></canvas>
+		<script>
+			var canvas, ctx, refreshInterval;
+			  window.onload = function() {
+			    canvas = document.getElementById("canvas");
+			    ctx = canvas.getContext("2d");
+			//paint background
+			ctx.fillStyle = "black";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			
+			//title screen
+			ctx.fillStyle = "white";
+			ctx.font = "100px Arial";		
+			ctx.fillText("SNAKE", 25, canvas.height/2);
+			ctx.font = "35px Arial";		
+			ctx.fillText("Click to play", canvas.width/2 - 50, canvas.height/2 + 40);
+			ctx.font = "15px Arial";		
+			ctx.fillText("Use arrow keys to move", canvas.width/2 - 80, canvas.height - 10);   
+			
+			//add events
+			canvas.addEventListener("focus", myFocusFunction, true);
+			canvas.addEventListener("blur", myBlurFunction, true);
+			
+			  };
+			
+			//canvas focused
+			function myFocusFunction() {	 
 			document.addEventListener("keydown", keyDownEvent);	  
 			// render X times per second
 			if(!GameOverVal){
-				var x = 30;
-				refreshInterval = setInterval(draw, 1000 / x);
+			var x = 30;
+			refreshInterval = setInterval(draw, 1000 / x);
 			}
-	  }
-	  
-	  //lose focus
-	  function myBlurFunction() {	  
+			}
+			
+			//lose focus
+			function myBlurFunction() {	  
 			clearInterval(refreshInterval);
 			ctx.fillStyle = "white";
 			ctx.font = "15px Arial";		
 			ctx.fillText("paused", canvas.width/2 - 50, canvas.height - 10);
 			document.removeEventListener("keydown", keyDownEvent);  
-	  }	 
-	  
-	  var GameOverVal = false;
-	  var scoreText = document.getElementById("score");
-      // game world
-      var gridSize = (tileSize = 20); // 20 x 20 = 400
-      var nextX = (nextY = 0);
-      // snake
-      var defaultTailSize = 10;
-      var tailSize = defaultTailSize;
-      var snakeTrail = [];
-      var snakeX = (snakeY = 10);
-	  var onTheMove = false;
-      // apple
-      var appleX = (appleY = 15);
-      // draw
-	  var j = 0;
-      function draw() {
-		j++;
-		if(j == 2){
+			}	 
+			
+			var GameOverVal = false;
+			var scoreText = document.getElementById("score");
+			  // game world
+			  var gridSize = (tileSize = 20); // 20 x 20 = 400
+			  var nextX = (nextY = 0);
+			  // snake
+			  var defaultTailSize = 4;
+			  var tailSize = defaultTailSize;
+			  var snakeTrail = [];
+			  var snakeX = (snakeY = 10);
+			var onTheMove = false;
+			  // apple
+			  var appleX = (appleY = 15);
+			  // draw
+			var j = 0;
+			  function draw() {
+			j++;
+			if(j == 2){
 			j = 0;
 			// move snake
 			snakeX += nextX;
 			snakeY += nextY;
 			// snake out game world - check
 			if (snakeX < 0) {
-			  snakeX = gridSize - 1;
+			 snakeX = gridSize - 1;
 			}
 			if (snakeX > gridSize - 1) {
-			  snakeX = 0;
+			 snakeX = 0;
 			}
 			if (snakeY < 0) {
-			  snakeY = gridSize - 1;
+			 snakeY = gridSize - 1;
 			}
 			if (snakeY > gridSize - 1) {
-			  snakeY = 0;
+			 snakeY = 0;
 			}
 			//snake bite apple?
 			if (snakeX == appleX && snakeY == appleY) {
-			  tailSize++;
-			  //new apple not on snake
-			  var onSnake = true;
-			  while(onSnake && onTheMove){
-				console.log(onSnake);
-				onSnake = false;
-				appleX = Math.floor(Math.random() * gridSize);
-				appleY = Math.floor(Math.random() * gridSize);
-				  for (var i = 0; i < snakeTrail.length; i++) {
-					if (snakeTrail[i].x == appleX) {
-						console.log("onSnake");
-					  onSnake = true;
-					}
-					if (snakeTrail[i].y == appleY) {
-						console.log("onSnake");
-					  onSnake = true;
-					}
-				  }
+			 tailSize++;
+			 //new apple not on snake
+			 var onSnake = true;
+			 while(onSnake && onTheMove){
+			console.log(onSnake);
+			onSnake = false;
+			appleX = Math.floor(Math.random() * gridSize);
+			appleY = Math.floor(Math.random() * gridSize);
+			  for (var i = 0; i < snakeTrail.length; i++) {
+				if (snakeTrail[i].x == appleX) {
+					console.log("onSnake");
+				  onSnake = true;
+				}
+				if (snakeTrail[i].y == appleY) {
+					console.log("onSnake");
+				  onSnake = true;
+				}
 			  }
+			 }
 			}
 			//paint background
 			ctx.fillStyle = "black";
@@ -126,42 +122,42 @@
 			ctx.fillStyle = 'white';
 			for (var i = 0; i < snakeTrail.length; i++) {	
 			//draw body
-				if (i != snakeTrail.length - 1) {
-				  ctx.fillRect(
-					snakeTrail[i].x * tileSize,
-					snakeTrail[i].y * tileSize,
-					tileSize,
-					tileSize
-				  );
-			  }
-			  //draw head
-			  else{  
-			  	ctx.fillStyle = 'lightgray';
-				ctx.fillRect(
+			if (i != snakeTrail.length - 1) {
+			  ctx.fillRect(
 				snakeTrail[i].x * tileSize,
 				snakeTrail[i].y * tileSize,
 				tileSize,
 				tileSize
-				);
-			  }
-			  //snake bites it's tail? onTheMove prevents death on start
-			  if (snakeTrail[i].x == snakeX && snakeTrail[i].y == snakeY && onTheMove) {
-			  	ctx.fillStyle = 'red';
-				ctx.fillRect(
-					snakeTrail[i].x * tileSize,
-					snakeTrail[i].y * tileSize,
-					tileSize,
-					tileSize
-				);
-			  	ctx.fillStyle = 'white';				
-				GameOverVal = true;				
-			  }
+			  );
+			 }
+			 //draw head
+			 else{  
+			 	ctx.fillStyle = 'lightgray';
+			ctx.fillRect(
+			snakeTrail[i].x * tileSize,
+			snakeTrail[i].y * tileSize,
+			tileSize,
+			tileSize
+			);
+			 }
+			 //snake bites it's tail? onTheMove prevents death on start
+			 if (snakeTrail[i].x == snakeX && snakeTrail[i].y == snakeY && onTheMove) {
+			 	ctx.fillStyle = 'red';
+			ctx.fillRect(
+				snakeTrail[i].x * tileSize,
+				snakeTrail[i].y * tileSize,
+				tileSize,
+				tileSize
+			);
+			 	ctx.fillStyle = 'white';				
+			GameOverVal = true;				
+			 }
 			}
 			ctx.fillStyle = "darkgray";
 			ctx.font = "25px Arial";		
 			ctx.fillText(tailSize- defaultTailSize, 10, canvas.height - 10);
 			if(GameOverVal){
-				GameOver();
+			GameOver();
 			}
 			
 			// paint apple
@@ -173,80 +169,80 @@
 			//set snake trail
 			snakeTrail.push({ x: snakeX, y: snakeY });
 			while (snakeTrail.length > tailSize) {
-			  snakeTrail.shift();
+			 snakeTrail.shift();
 			}
-		}
-	  }
-	  
-	  function GameOver() {	
+			}
+			}
+			
+			function GameOver() {	
 			if(GameOverVal){  
-				clearInterval(refreshInterval);
-				onTheMove = false;		
-				
-				snakeTrail = [];
-				snakeX = (snakeY = 10);
-				nextX = 0;
-				nextY = 0;	
-				setTimeout(function () {
-					if(!onTheMove){
-					ctx.fillStyle = "black";
-					ctx.fillRect(0, 0, canvas.width, canvas.height);
-					ctx.fillStyle = "white";
-					ctx.font = "60px Arial";		
-					ctx.fillText("GAME OVER", 25, canvas.height/2);
-					ctx.font = "35px Arial";		
-					ctx.fillText("Your Score: " + (tailSize - defaultTailSize), canvas.width/2 - 100, canvas.height/2 + 40);
-					ctx.font = "15px Arial";		
-					ctx.fillText("Press 'R' to restart", canvas.width/2 - 60, canvas.height - 10); 	
-					tailSize = defaultTailSize;
-					}						
-				}, 2000);
+			clearInterval(refreshInterval);
+			onTheMove = false;		
+			
+			snakeTrail = [];
+			snakeX = (snakeY = 10);
+			nextX = 0;
+			nextY = 0;	
+			setTimeout(function () {
+				if(!onTheMove){
+				ctx.fillStyle = "black";
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = "white";
+				ctx.font = "60px Arial";		
+				ctx.fillText("GAME OVER", 25, canvas.height/2);
+				ctx.font = "35px Arial";		
+				ctx.fillText("Your Score: " + (tailSize - defaultTailSize), canvas.width/2 - 100, canvas.height/2 + 40);
+				ctx.font = "15px Arial";		
+				ctx.fillText("Press 'R' to restart", canvas.width/2 - 60, canvas.height - 10); 	
+				tailSize = defaultTailSize;
+				}						
+			}, 2000);
 			}
-	  }
-	  
-      // input
-      function keyDownEvent(e) {
-		e.preventDefault();	  
-        switch (e.keyCode) {
-          case 37:
+			}
+			
+			  // input
+			  function keyDownEvent(e) {
+			e.preventDefault();	  
+			    switch (e.keyCode) {
+			      case 37:
 			if(nextX != 1 && !GameOverVal){
-				nextX = -1;
-				nextY = 0;
-				onTheMove = true;
+			nextX = -1;
+			nextY = 0;
+			onTheMove = true;
 			}
-            break;
-          case 38:
-		  	if(nextY != 1 && !GameOverVal){
-				nextX = 0;
-				nextY = -1;
-				onTheMove = true;
+			        break;
+			      case 38:
+				if(nextY != 1 && !GameOverVal){
+			nextX = 0;
+			nextY = -1;
+			onTheMove = true;
 			}
-            break;
-          case 39:
-		  	if(nextX != -1 && !GameOverVal){
-				nextX = 1;
-				nextY = 0;
-				onTheMove = true;
+			        break;
+			      case 39:
+				if(nextX != -1 && !GameOverVal){
+			nextX = 1;
+			nextY = 0;
+			onTheMove = true;
 			}
-            break;
-          case 40:
-		  	if(nextY != -1 && !GameOverVal){
-				nextX = 0;
-				nextY = 1;
-				onTheMove = true;
+			        break;
+			      case 40:
+				if(nextY != -1 && !GameOverVal){
+			nextX = 0;
+			nextY = 1;
+			onTheMove = true;
 			}
-            break;
-		  case 82: //R			
+			        break;
+			case 82: //R			
 			var x = 30;
 			if(GameOverVal){
-				GameOverVal = false;
-				tailSize = defaultTailSize;
-				refreshInterval = setInterval(draw, 1000 / x);
+			GameOverVal = false;
+			tailSize = defaultTailSize;
+			refreshInterval = setInterval(draw, 1000 / x);
 			}
-            break;
-        }
-      }
-</script>
-</body>
+			        break;
+			    }
+			  }
+		</script>
+	</body>
 </html>
 
